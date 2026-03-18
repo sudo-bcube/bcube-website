@@ -7,19 +7,66 @@
       We're inviting a small group to experience our products before the world does.
       Use it for free. And if you'd like, help us polish the final details before launch day.
     </p>
-    <form class="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center" onsubmit="event.preventDefault()">
+    <form id="early-access-form" class="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
       <input
         type="email"
+        id="ea-email"
         placeholder="Your email address"
         required
         class="w-full rounded-lg px-5 py-3 text-sm text-gray-900 outline-none placeholder:text-gray-400 sm:w-80"
       />
       <button
+        id="ea-submit-btn"
         type="submit"
         class="w-full rounded-lg bg-pastel-azure px-8 py-3 text-sm font-semibold text-dark-blue transition-opacity hover:opacity-90 sm:w-auto"
       >
         Step Inside Early
       </button>
     </form>
+    <div id="ea-status" class="mt-4 hidden rounded-lg px-4 py-3 text-center text-sm"></div>
   </div>
 </section>
+
+<script define:vars={{ scriptUrl: import.meta.env.PUBLIC_EARLY_ACCESS_SCRIPT_URL }}>
+  const form = document.getElementById("early-access-form");
+  const emailInput = document.getElementById("ea-email");
+  const submitBtn = document.getElementById("ea-submit-btn");
+  const statusEl = document.getElementById("ea-status");
+
+  function showStatus(message, isError) {
+    statusEl.textContent = message;
+    statusEl.className = `mt-4 rounded-lg px-4 py-3 text-center text-sm ${
+      isError ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"
+    }`;
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Joining...";
+    statusEl.className = "mt-4 hidden";
+
+    try {
+      const response = await fetch(scriptUrl, {
+        method: "POST",
+        body: JSON.stringify({ email: emailInput.value }),
+      });
+
+      const data = await response.json();
+
+      if (data.result === "success") {
+        showStatus("You're in! We'll reach out when it's time.", false);
+        form.reset();
+      } else if (data.result === "duplicate") {
+        showStatus("You're already on the list! We'll be in touch soon.", false);
+      } else {
+        showStatus("Something went wrong. Please try again.", true);
+      }
+    } catch {
+      showStatus("Network error. Please check your connection and try again.", true);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Step Inside Early";
+    }
+  });
+</script>
