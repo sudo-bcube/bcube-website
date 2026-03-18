@@ -1,0 +1,82 @@
+---
+const faqs = [
+  {
+    q: "What exactly is this?",
+    a: "BCube is a product studio that builds apps. Each one tackles one problem exceptionally well, with interfaces that feel natural, tasks that flow effortlessly, and solutions that work.",
+  },
+  {
+    q: "How do I get access?",
+    a: "Easy. Join the early access list (the VIP group). We'll let you in before launch so you can try it free and even help shape it if you want.",
+  },
+  {
+    q: "Is it free?",
+    a: "Completely. Early access costs zero dollars. You simply get the perks of being early, clarity, focus, and bragging rights.",
+  },
+  {
+    q: "Do I have to do anything?",
+    a: "Nope. You can quietly explore, or you can give feedback, optional either way. Think of it as VIP access with zero homework.",
+  },
+  {
+    q: "When will it launch?",
+    a: "Soon. Early access members go first. You'll get updates straight to your inbox so you know exactly when the apps are ready for the wider world.",
+  },
+];
+---
+
+<section id="faq" class="bg-light-gray px-6 py-24">
+  <div class="mx-auto max-w-3xl">
+    <h2 class="text-center text-3xl font-bold text-dark-blue sm:text-4xl">
+      Questions We Know You're Thinking
+    </h2>
+
+    <div class="mt-12 space-y-4">
+      {faqs.map((faq, i) => (
+        <div class="faq-item rounded-xl bg-white shadow-sm">
+          <button
+            class="flex w-full items-center justify-between px-6 py-5 text-left"
+            aria-expanded="false"
+            data-faq={i}
+          >
+            <span class="pr-4 font-medium text-dark-blue">{faq.q}</span>
+            <svg
+              class="faq-chevron size-5 shrink-0 text-dark-blue/50 transition-transform"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </svg>
+          </button>
+          <div class="faq-answer hidden px-6 pb-5">
+            <p class="text-sm leading-relaxed text-gray-600">{faq.a}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll("[data-faq]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const item = btn.closest(".faq-item")!;
+      const answer = item.querySelector(".faq-answer")!;
+      const chevron = item.querySelector(".faq-chevron")!;
+      const isOpen = btn.getAttribute("aria-expanded") === "true";
+
+      document.querySelectorAll(".faq-item").forEach((other) => {
+        if (other !== item) {
+          other.querySelector(".faq-answer")!.classList.add("hidden");
+          other.querySelector("[data-faq]")!.setAttribute("aria-expanded", "false");
+          (other.querySelector(".faq-chevron")! as HTMLElement).style.transform = "";
+        }
+      });
+
+      answer.classList.toggle("hidden", isOpen);
+      btn.setAttribute("aria-expanded", String(!isOpen));
+      (chevron as HTMLElement).style.transform = isOpen ? "" : "rotate(180deg)";
+    });
+  });
+</script>

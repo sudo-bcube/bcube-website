@@ -1,0 +1,38 @@
+---
+const links = [
+  { label: "Why", href: "#why" },
+  { label: "How", href: "#how" },
+  { label: "Products", href: "#products" },
+  { label: "FAQ", href: "#faq" },
+  { label: "Contact", href: "#contact" },
+];
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-dark-blue px-6 py-12">
+  <div class="mx-auto flex max-w-5xl flex-col items-center gap-8">
+    <a href="#" aria-label="BCube Home">
+      <img
+        src="/logos/Bcube final_White_Wordmark.svg"
+        alt="BCube Technologies"
+        class="h-8"
+      />
+    </a>
+
+    <nav class="flex flex-wrap justify-center gap-6">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class="text-sm text-white/60 transition-colors hover:text-white"
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+
+    <p class="text-sm text-white/40">
+      &copy; {year} BCube Technologies LTD. All rights reserved.
+    </p>
+  </div>
+</footer>
